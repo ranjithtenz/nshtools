@@ -368,6 +368,7 @@ createNshtool = function () {
   self.unlink = fs.unlink;
   self.argv = process.argv;
   self.env = process.env;
+  self.exec = sys.exec;
   return self;
 };
 
