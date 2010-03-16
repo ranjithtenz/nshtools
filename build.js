@@ -31,6 +31,7 @@ nsh.getOption('--help', function(option_error, arg) {
 
 /* Main script body */
 (function () {
+  nsh.echo("Running asciidoc to biuld html pages.  This takes a while.");
   nsh.globFolder('.', '.asciidoc$', function (error, filename) {
     if (error) {
       nsh.die(error);
