@@ -26,7 +26,7 @@ nshtools needs to have node already installed. See link:http://nodejs.org[http:/
 
 == GORY DETAILS
 
-Typically node modules live in two place /usr/local/lib/node/libraries or $HOME/.node_libraries. If you write your own module or download someone elses and don't want to play with `process.paths` you wind up coping that module to where the rest of the modules live.  Likewise if you've written an application you wind up copying it to a "bin" folder on many Unix systems. install-nshtools.js does this for you based on the prefix path.
+Typically node modules live in two place /usr/local/lib/node/libraries or $HOME/.node_libraries. If you write your own module or download someone elses and don't want to play with `require.paths` you wind up coping that module to where the rest of the modules live.  Likewise if you've written an application you wind up copying it to a "bin" folder on many Unix systems. install-nshtools.js does this for you based on the prefix path.
 
 The default prefix path is your local home directory. The installer will fail if the directories don't exists. That is one of the ways it is simple. footnote:[$HOME/bin for syncme.js and $HOME/.node_libraries for nshtools.js, otherwise nshtools is put in $PREFIX/lib/node/libraries.]
 

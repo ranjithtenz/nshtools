@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
+if(require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
+}
+
 /* Bootstrap nshtools installation. */
-nshtools = require(process.cwd() + '/nshtools');
-nsh = nshtools.createNshtool();
+nsh = require(process.cwd() + '/nshtools').createNshtool();
+
 nsh.getOption('--prefix', function(prefix_error, prefix_path) {
   nsh.bin_path = '/bin';
   if (prefix_error) {
@@ -14,6 +18,7 @@ nsh.getOption('--prefix', function(prefix_error, prefix_path) {
     nsh.node_lib = '/lib/node/libraries';
   }
 });
+
 nsh.prompt("Do you want to install nshtools.js in " + nsh.prefix_path + nsh.node_lib + "? (Y/N) ",
 function (response) {
   if (response.toUpperCase().trim() === 'Y') {
@@ -29,6 +34,8 @@ function (response) {
     nsh.echo("\n\n\tNo action taken. Nothing installed. " + new Date() + "\n");
   }
 });
+
+/*
 nsh.prompt("Do you want to install syncme.js in " + nsh.prefix_path +
 nsh.bin_path + "? (Y/N) ",
 function(response) {
@@ -52,5 +59,7 @@ function(response) {
     nsh.echo("\n\n\tNo action taken. Nothing installed. " + new Date() + "\n");
   }
 });
+*/
+
 nsh.run();
 

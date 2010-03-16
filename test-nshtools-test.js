@@ -8,8 +8,8 @@
  * Released under "The BSD License" as described at http://opensource.org/licenses/bsd-license.php
  */
 
-if (process.paths.indexOf(process.cwd()) < 0) {
-  process.paths.push(process.cwd());
+if (require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
 }
 
 var nshtools = require('nshtools'),

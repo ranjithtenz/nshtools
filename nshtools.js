@@ -16,8 +16,8 @@
  */
 
 /* It's useful to beable to use things in the working directory */
-if (process.paths.indexOf(process.cwd()) < 0) {
-  process.paths.push(process.cwd());
+if (require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
 }
 
 var sys = require('sys'),

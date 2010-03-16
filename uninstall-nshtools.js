@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+if(require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
+}
+
+
 /* Bootstrap nshtools installation. */
 nshtools = require(process.cwd() + '/nshtools');
 nsh = nshtools.createNshtool();
@@ -18,8 +23,8 @@ nsh.prompt("Do you want to uninstall nshtools.js in " + nsh.prefix_path + nsh.no
 function (response) {
   if (response.toUpperCase().trim() === 'Y') {
     nsh.verbose = false;
-    nsh.echo("\n\n\tUninstalling ..." + new Date() + "\n");
-    nsh.remove("nshtools.js", nsh.prefix_path + nsh.node_lib + '/nshtools.js', function (remove_error) {
+    nsh.echo("\n\n\tUninstalling " + nsh.prefix_path + nsh.node_lib + "/nshtools.js ..." + new Date() + "\n");
+    nsh.remove(nsh.prefix_path + nsh.node_lib + '/nshtools.js', function (remove_error) {
       if (remove_error) {
         nsh.die("Uninstall failed. " + remove_error + "\n");
       }
@@ -29,6 +34,8 @@ function (response) {
     nsh.echo("\n\n\tNo action taken. Nothing uninstalled. " + new Date() + "\n");
   }
 });
+
+/*
 nsh.prompt("Do you want to install syncme.js in " + nsh.prefix_path +
 nsh.bin_path + "? (Y/N) ",
 function(response) {
@@ -46,5 +53,7 @@ function(response) {
     nsh.echo("\n\n\tNo action taken. Nothing uninstalled. " + new Date() + "\n");
   }
 });
+*/
+
 nsh.run();
 

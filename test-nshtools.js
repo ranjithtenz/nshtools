@@ -3,8 +3,8 @@
 /**
  * test-nshtools.js - a wrapper for all the separate tests.
  */
-if (process.paths.indexOf(process.cwd()) < 0) {
-  process.paths.push(process.cwd());
+if (require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
 }
 
 var nsh = require('nshtools').createNshtool(), sys = require('sys'),

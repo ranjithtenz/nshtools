@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-if (process.paths.indexOf('.') < 0) {
-  process.paths.push('.');
+if (require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
 }
 var nshtools = require('nshtools');
 nsh = nshtools.createNshtool();

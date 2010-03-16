@@ -5,8 +5,8 @@
  */
 
 /* It's helpful to add the working path to the node search path */
-if(process.paths.indexOf(process.cwd()) < 0) {
-  process.paths.push(process.cwd());
+if(require.paths.indexOf(process.cwd()) < 0) {
+  require.paths.push(process.cwd());
 }
 
 var nsh = require('nshtools').createNshtool();
