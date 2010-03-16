@@ -17,7 +17,8 @@ var nshtools = require('nshtools'),
     error_count = 0,
     LFTAB = "\n\t";
     OK = "Ok",
-    queue = new nshtools.DS(nshtools.QUEUE), stack = new nshtools.DS(nshtools.STACK);
+    queue = nshtools.createQueue(), 
+    stack = nshtools.createStack();
 
 TestQueue = function () {
   /* Test the Queue */

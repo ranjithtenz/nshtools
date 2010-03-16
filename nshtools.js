@@ -24,13 +24,133 @@ var sys = require('sys'),
     fs = require('fs'),
     path = require('path');
 
-version = '0.0.2x';
-release = '2010.03.11';
+version = this.version = '0.0.2x';
+release = this.release = '2010.03.16';
+STACK = this.STACK = 1;
+QUEUE = this.QUEUE = 2;
 
-/*
- * echo, prompt, run are helpful for creating a simple call
- * and response type interaction for basic utility shell scripts.
+
+/**
+ * nshtools integrates some useful simple data structures (i.e. Stacks, Queues).
+ * createStack(), createQueue() are just wrap functions around the more general
+ * createDS() function with initialization set as either STACK or QUEUE.
  */
+createDS = this.createDS = function (dsType) {
+  var self = {};
+
+  self.ds = [];
+  if (dsType === undefined) {
+    self.dsType = QUEUE;
+  } else {
+    self.dsType = dsType;  
+  }
+
+  self.view = function (pos) {
+    if (self.ds.length === 0) {
+      return;
+    }
+    switch (pos) {
+      case 'top':
+        if (self.dsType === STACK) {
+          pos = self.ds.length - 1;      
+        } else {
+          pos = 0;
+        }
+        break;
+      case 'bottom':
+        if (self.dsType === STACK) {
+          pos = 0;    
+        } else {
+          pos = self.ds.length - 1;            
+        }
+        break;
+    }
+    if (pos < 0) {
+      pos = self.ds.length + pos;
+    }
+    if (pos < 0) {
+      pos = 0;
+    }
+    if (pos >= self.ds.length) {
+      pos = self.ds.length - 1 ;
+    }
+    return self.ds[pos];
+  }
+
+  self.pop = function () { 
+    return self.ds.pop();
+  };
+
+  self.push = function (item) { 
+    return self.ds.push(item); 
+  };
+
+  self.isEmpty = function () { 
+    return (self.ds.length === 0); 
+  };
+  
+  self.size = function () { 
+    return (self.ds.length); 
+  };
+
+  self.top = function () {
+    if (self.ds.length > 0) {
+      if (self.dsType === QUEUE) {
+        return self.ds[0];
+      }
+      return self.ds[self.ds.length - 1];   
+    }
+    return;
+  };
+
+  self.bottom = function () {
+    if (self.ds.length > 0) {
+      if (self.dsType === QUEUE) {
+        return self.ds[self.ds.length - 1];    
+      }
+      return self.ds[0];
+    }
+    return;
+  };
+
+  self.popAll = function () {
+    if (self.ds.length > 0) {
+      /* Pop implies STACK/FILO so reverse array */
+      self.ds.reverse();
+      var s = self.ds;
+
+      delete self.ds;
+      self.ds = [];
+      return s;
+    }
+    return;
+  };
+
+  self.shift = function () { 
+    return self.ds.shift();
+  };
+
+  self.shiftAll = function () {
+    if (self.ds.length > 0) {
+      var q = self.ds;
+
+      delete self.ds;
+      self.ds = [];
+      return q;
+    }
+    return;
+  };
+
+  return self;
+};
+
+createStack = this.createStack = function() {
+  return createDS(STACK);
+};
+
+createQueue = this.createQueue = function() {
+  return createDS(QUEUE);
+};
 
 /**
  * echo - print a line to the console with or without a new line.
@@ -219,9 +339,7 @@ run = function () {
 
 /*
  * Re-create some common Unix style file system primitives. 
- * E.G. cp, mv
  */
-
 
 /**
  * cp - copy a file. All three parameters are required.
@@ -372,173 +490,16 @@ createNshtool = function () {
   return self;
 };
 
-exports.createNshtool = createNshtool;
-exports.echo = echo;
-exports.getOption = getOption;
-exports.prompt = prompt;
-exports.NoOp = NoOp;
-exports.run  = run;
-exports.cp = cp;
-exports.mv = mv;
-exports.die = die;
-exports.globFolder = globFolder;
-
-
-/*
- * Basic aliases for CommonJS interoperability
- */
-exports.ls = fs.readdir;
-exports.listDirectory = fs.readdir;
-exports.copy = cp;
-exports.move = mv;
-exports.remove = fs.unlink;
-exports.makeDirectory = fs.mkdir;
-exports.removeDirectory = fs.rmdir;
-
-
-/**
- * DS or data structures is just what sound likes. A *Simple*
- * implementation of useful data structures (e.g. Stacks, Queues).
- * Thought it might be useful to have with nshtools.
- * 
- * These should work but don't have good tests for them yet ...
- * 
- * Might move out to their own module again in the future,
- * they came from PhizCode's ds.js
- */
-var STACK = 1, QUEUE = 2,
-    DS = this.DS = function (dsType) {
-      this.ds = [];
-      if (dsType === undefined) {
-        this.dsType = QUEUE;
-      } else {
-        this.dsType = dsType;  
-      }
-    };
-
-DS.prototype.view = function (pos) {
-  if (this.ds.length === 0) {
-    return;
-  }
-  switch (pos) {
-    case 'top':
-      if (this.dsType === STACK) {
-        pos = this.ds.length - 1;      
-      } else {
-        pos = 0;
-      }
-      break;
-    case 'bottom':
-      if (this.dsType === STACK) {
-        pos = 0;    
-      } else {
-        pos = this.ds.length - 1;            
-      }
-      break;
-  }
-  if (pos < 0) {
-    pos = this.ds.length + pos;
-  }
-  if (pos < 0) {
-    pos = 0;
-  }
-  if (pos >= this.ds.length) {
-    pos = this.ds.length - 1 ;
-  }
-  return this.ds[pos];
-}
-
-DS.prototype.pop = function () { 
-  return this.ds.pop();
-};
-
-DS.prototype.push = function (item) { 
-  return this.ds.push(item); 
-};
-
-DS.prototype.isEmpty = function () { 
-  return (this.ds.length === 0); 
-};
-
-DS.prototype.size = function () { 
-  return (this.ds.length); 
-};
-
-DS.prototype.top = function () {
-  if (this.ds.length > 0) {
-    if (this.dsType === QUEUE) {
-      return this.ds[0];
-    }
-    return this.ds[this.ds.length - 1];   
-  }
-  return;
-};
-
-DS.prototype.bottom = function () {
-  if (this.ds.length > 0) {
-    if (this.dsType === QUEUE) {
-      return this.ds[this.ds.length - 1];    
-    }
-    return this.ds[0];
-  }
-  return;
-};
-
-DS.prototype.popAll = function () {
-  if (this.ds.length > 0) {
-    /* Pop implies STACK/FILO so reverse array */
-    this.ds.reverse();
-    var s = this.ds;
-
-    delete this.ds;
-    this.ds = [];
-    return s;
-  }
-  return;
-};
-
-DS.prototype.shift = function () { 
-  return this.ds.shift();
-};
-
-DS.prototype.shiftAll = function () {
-  if (this.ds.length > 0) {
-    var q = this.ds;
-
-    delete this.ds;
-    this.ds = [];
-    return q;
-  }
-  return;
-};
-
-
-exports.STACK = STACK;
-exports.QUEUE = QUEUE;
-exports.DS = this.DS;
-exports.DS.prototype = this.DS.prototype;
-exports.DS.prototype.version = DS.version;
-exports.DS.prototype.view = DS.prototype.view;
-exports.DS.prototype.push = DS.prototype.push;
-exports.DS.prototype.shift = DS.prototype.shift;
-exports.DS.prototype.pop = DS.prototype.pop;
-exports.DS.prototype.isEmpty = DS.prototype.isEmpty;
-exports.DS.prototype.size = DS.prototype.size;
-exports.DS.prototype.top = DS.prototype.top;
-exports.DS.prototype.bottom = DS.prototype.bottom;
-exports.DS.prototype.popAll = DS.prototype.popAll;
-exports.DS.prototype.shiftAll = DS.prototype.shiftAll;
-
 
 /**
  * Test - this is a set of methods for integrating assertive tests
  * into shell scripts.
  */
 this.createTest = function () { 
-  var self = this;
+  var self = {};
 
-  self.queue = new DS(QUEUE);
-  self.msgs = new DS(QUEUE);
+  self.queue = createQueue();
+  self.msgs = createQueue();
   self.successes = 0;
   self.failures = 0;
 
@@ -611,5 +572,36 @@ this.createTest = function () {
   return self;
 };
 
+/*
+ * Main exports of nsthools' module
+ */
+exports.version = this.version;
+exports.release = this.release;
+exports.STACK = this.STACK;
+exports.QUEUE = this.QUEUE;
+exports.createDS = this.createDS;
+exports.createStack = this.createStack;
+exports.createQueue = this.createQueue;
 exports.createTest = this.createTest;
+exports.createNshtool = createNshtool;
+exports.echo = echo;
+exports.getOption = getOption;
+exports.prompt = prompt;
+exports.NoOp = NoOp;
+exports.run  = run;
+exports.cp = cp;
+exports.mv = mv;
+exports.die = die;
+exports.globFolder = globFolder;
+
+/*
+ * Basic aliases for CommonJS interoperability
+ */
+exports.ls = fs.readdir;
+exports.listDirectory = fs.readdir;
+exports.copy = cp;
+exports.move = mv;
+exports.remove = fs.unlink;
+exports.makeDirectory = fs.mkdir;
+exports.removeDirectory = fs.rmdir;
 
