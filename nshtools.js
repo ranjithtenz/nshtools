@@ -418,31 +418,31 @@ mv = function (source, target, callback) {
  *
  * I think this will be superceded by a real node module that implements glob().
  *
- * @param path - the folder to scan, default path is ".". null, "" and undefined
+ * @param search_path - the folder to scan, default path is ".". null, "" and undefined
  * are translated as ".".
  * @param wildcards - a string which will get passed to RegExp (e.g. *.txt)
  * @param callback - the method which will get called when something is found.
  * two parameters are passed - error, path.
  */
-globFolder = function (path, wildcards, callback) {
+globFolder = function (search_path, wildcards, callback) {
   var self = this;
 
   if (callback === undefined) {
     callback = self.NoOp;
   }
-  if (path === '' || path === null || path === undefined) {
-    path = '.';
+  if (search_path === '' || search_path === null || search_path === undefined) {
+    search_path = '.';
   }
-  fs.readdir(path, function (error, dirs) {
+  fs.readdir(search_path, function (error, dirs) {
     if (error) {
-      callback('ERROR: globFolder("' + path + "','" + wildcards + "'): " + error);
+      callback('ERROR: globFolder("' + search_path + "','" + wildcards + "'): " + error);
       return;
     }
     re = new RegExp(wildcards);
     for (i in dirs) {
-      (function (path) {
-        if (path.match(re)) {
-          callback(undefined, path);
+      (function (working_path) {
+        if (working_path.match(re)) {
+          callback(undefined, working_path);
         }
       })(dirs[i]);
     }
@@ -572,29 +572,36 @@ this.createTest = function () {
   return self;
 };
 
+/**
+ * This is an object that is intended to privide some of the same
+ * functionality as the find command in Unix-like OSes.
+ */
 createFinder = function () {
   var self = {};
-  // FIXME: need to use WSCORE object's message and error queues.
   
-  // findFiles
-  self.findFiles = function (folder, callback) {
+  /* FIXME: I need to merge findFiles, findFolder with globFolders with options. */
+
+  /**
+   * proof of concept find files.  Need to add options support.
+   * findFiles
+   */
+  self.findFiles = function (err, folder, callback) {
     fs.readdir(folder, function (err, subfolders) {
       if (err) {
-        // FIXME: store in error queue with folder name.
-        sys.error(folder + ": " + err);
+        callback(folder + ": " + err, folder);
       }
       for(i in subfolders) {
         (function (subfolder) {
           fs.stat(subfolder, function (err, stats) {
             if (err) {
               // FIXME: Store in error queue with subfolder name.
-              sys.error(subfolder + ": " + err);
+              callback(subfolder + ": " + err, subfolder);
             }
             if (stats.isDirectory()) {
               getSubFolders(subfolder, callback);
             } else {
               // If we were finding files then we would do callback here.
-              callback(subfolder);
+              callback(undefined, subfolder);
             }
           });
         })(path.join(folder, subfolders[i]));
@@ -602,21 +609,22 @@ createFinder = function () {
     });  
   };
   
-  // findFolders
+  /**
+   * proof of concept find folders.  Need to add options support.
+   * findFolders
+   */
   self.findFolders = function (folder, callback) {
     // If we're finding folders we find them here.
-    callback(folder);
+    callback(undefined, folder);
     fs.readdir(folder, function (err, subfolders) {
       if (err) {
-        // FIXME: Store in error queue with folder name.
-        sys.error(folder + ": " + err);
+        callback(folder + ": " + err, folder);
       }
       for(i in subfolders) {
         (function (subfolder) {
           fs.stat(subfolder, function (err, stats) {
             if (err) {
-              // FIXME: Store in error queue with subfolder name.
-              sys.error(subfolder + ": " + err);
+              callback(subfolder + ": " + err, subfolder);
             }
             if (stats.isDirectory()) {
               getSubFolders(subfolder, callback);
@@ -649,7 +657,7 @@ exports.run  = run;
 exports.cp = cp;
 exports.mv = mv;
 exports.die = die;
-exports.globFolder = globFolder;
+exports.globFolder = globFolder; // FIXME: this should move to the finder object.
 
 /*
  * Basic aliases for CommonJS interoperability
