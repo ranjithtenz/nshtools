@@ -572,6 +572,62 @@ this.createTest = function () {
   return self;
 };
 
+createFinder = function () {
+  var self = {};
+  // FIXME: need to use WSCORE object's message and error queues.
+  
+  // findFiles
+  self.findFiles = function (folder, callback) {
+    fs.readdir(folder, function (err, subfolders) {
+      if (err) {
+        // FIXME: store in error queue with folder name.
+        sys.error(folder + ": " + err);
+      }
+      for(i in subfolders) {
+        (function (subfolder) {
+          fs.stat(subfolder, function (err, stats) {
+            if (err) {
+              // FIXME: Store in error queue with subfolder name.
+              sys.error(subfolder + ": " + err);
+            }
+            if (stats.isDirectory()) {
+              getSubFolders(subfolder, callback);
+            } else {
+              // If we were finding files then we would do callback here.
+              callback(subfolder);
+            }
+          });
+        })(path.join(folder, subfolders[i]));
+      }
+    });  
+  };
+  
+  // findFolders
+  self.findFolders = function (folder, callback) {
+    // If we're finding folders we find them here.
+    callback(folder);
+    fs.readdir(folder, function (err, subfolders) {
+      if (err) {
+        // FIXME: Store in error queue with folder name.
+        sys.error(folder + ": " + err);
+      }
+      for(i in subfolders) {
+        (function (subfolder) {
+          fs.stat(subfolder, function (err, stats) {
+            if (err) {
+              // FIXME: Store in error queue with subfolder name.
+              sys.error(subfolder + ": " + err);
+            }
+            if (stats.isDirectory()) {
+              getSubFolders(subfolder, callback);
+            }
+          });
+        })(path.join(folder, subfolders[i]));
+      }
+    });  
+  };
+}
+
 /*
  * Main exports of nsthools' module
  */
@@ -584,6 +640,7 @@ exports.createStack = this.createStack;
 exports.createQueue = this.createQueue;
 exports.createTest = this.createTest;
 exports.createNshtool = createNshtool;
+exports.createFinder = createFinder;
 exports.echo = echo;
 exports.getOption = getOption;
 exports.prompt = prompt;
