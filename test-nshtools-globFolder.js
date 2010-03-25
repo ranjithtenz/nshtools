@@ -18,3 +18,4 @@ nsh.globFolder(undefined,'.js$', function (err, path) {
     nsh.echo("Scanning: " + path);
   }
 });
+

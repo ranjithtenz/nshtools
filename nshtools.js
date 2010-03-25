@@ -426,7 +426,8 @@ mv = function (source, target, callback) {
  */
 globFolder = function (search_path, wildcards, callback) {
   var self = this;
-
+  
+  // FIXME: Should allow searching subfolders
   if (callback === undefined) {
     callback = self.NoOp;
   }
@@ -470,6 +471,7 @@ createNshtool = function () {
   self.mv = mv;
   self.die = die;
   self.globFolder = globFolder;
+  self.finder = finder;
   self.ls = fs.readdir;
   self.listDirectory = fs.readdir;
   self.copy = cp;
@@ -573,68 +575,87 @@ this.createTest = function () {
 };
 
 /**
- * This is an object that is intended to privide some of the same
- * functionality as the find command in Unix-like OSes.
- */
-createFinder = function () {
-  var self = {};
-  
-  /* FIXME: I need to merge findFiles, findFolder with globFolders with options. */
+  * proof of concept find files.  Need to add options support.
+  * findFiles
+  */
+findFiles = function (err, folder, callback) {
+  fs.readdir(folder, function (err, subfolders) {
+    if (err) {
+      callback(folder + ": " + err, folder);
+    }
+    for(i in subfolders) {
+      (function (subfolder) {
+        fs.stat(subfolder, function (err, stats) {
+          if (err) {
+            callback(subfolder + ": " + err, subfolder);
+          }
+          if (stats.isDirectory()) {
+            getSubFolders(subfolder, callback);
+          } else {
+            // If we were finding files then we would do callback here.
+            callback(undefined, subfolder);
+          }
+        });
+      })(path.join(folder, subfolders[i]));
+    }
+  });  
+};
 
-  /**
-   * proof of concept find files.  Need to add options support.
-   * findFiles
-   */
-  self.findFiles = function (err, folder, callback) {
-    fs.readdir(folder, function (err, subfolders) {
-      if (err) {
-        callback(folder + ": " + err, folder);
-      }
-      for(i in subfolders) {
-        (function (subfolder) {
-          fs.stat(subfolder, function (err, stats) {
-            if (err) {
-              // FIXME: Store in error queue with subfolder name.
-              callback(subfolder + ": " + err, subfolder);
+
+/**
+ * finder - proof of concept for crawling folder trees.
+ *
+ * This should probably be integrated into a common object with globFolder
+ *
+ * @param folder - the path you want to scan
+ * @param options - an object which defines regex, filter properties.
+ * e.g. {'regex' : new RegEx('*.txt'), 'scantype' : 'file' , 'depth' : 1 }
+ * @param callback - the callback function you want to run. Two parameters are
+ * passed err and the path found.
+ */
+finder = function (folder, options, callback) {
+  if (options.regex === undefined) {
+    options.regex = false;
+  }
+  if (options.scantype === undefined) {
+    options.scantype = 'all';
+  }
+
+  // If we're finding folders we find them here.  
+  if (options.scantype === 'directory' || options.scantype === 'all') {
+    if (options.regex === false) {
+      callback(undefined, folder);  
+    } else if (folder.match(options.regex)) {
+      callback(undefined, folder);
+    }
+  }
+  fs.readdir(folder, function (err, subfolders) {
+    if (err) {
+      callback(folder + ": " + err, folder);
+    }
+    for(i in subfolders) {
+      (function (subfolder) {
+        fs.stat(subfolder, function (err, stats) {
+          if (err) {
+            callback(subfolder + ": " + err, subfolder);
+          }
+          if (stats.isDirectory()) {
+            finder(subfolder, options, callback);
+          } else {
+            if (options.scantype === 'file' || options.scantype === 'all') {
+              if (options.regex === false) {
+                callback(undefined, subfolder);  
+              } else if (subfolder.match(options.regex)) {
+                callback(undefined, subfolder);
+              }
             }
-            if (stats.isDirectory()) {
-              getSubFolders(subfolder, callback);
-            } else {
-              // If we were finding files then we would do callback here.
-              callback(undefined, subfolder);
-            }
-          });
-        })(path.join(folder, subfolders[i]));
-      }
-    });  
-  };
-  
-  /**
-   * proof of concept find folders.  Need to add options support.
-   * findFolders
-   */
-  self.findFolders = function (folder, callback) {
-    // If we're finding folders we find them here.
-    callback(undefined, folder);
-    fs.readdir(folder, function (err, subfolders) {
-      if (err) {
-        callback(folder + ": " + err, folder);
-      }
-      for(i in subfolders) {
-        (function (subfolder) {
-          fs.stat(subfolder, function (err, stats) {
-            if (err) {
-              callback(subfolder + ": " + err, subfolder);
-            }
-            if (stats.isDirectory()) {
-              getSubFolders(subfolder, callback);
-            }
-          });
-        })(path.join(folder, subfolders[i]));
-      }
-    });  
-  };
-}
+          }
+        });
+      })(path.join(folder, subfolders[i]));
+    }
+  });  
+};
+
 
 /*
  * Main exports of nsthools' module
@@ -648,7 +669,6 @@ exports.createStack = this.createStack;
 exports.createQueue = this.createQueue;
 exports.createTest = this.createTest;
 exports.createNshtool = createNshtool;
-exports.createFinder = createFinder;
 exports.echo = echo;
 exports.getOption = getOption;
 exports.prompt = prompt;
@@ -657,7 +677,8 @@ exports.run  = run;
 exports.cp = cp;
 exports.mv = mv;
 exports.die = die;
-exports.globFolder = globFolder; // FIXME: this should move to the finder object.
+exports.globFolder = globFolder;
+exports.finder = finder;
 
 /*
  * Basic aliases for CommonJS interoperability
