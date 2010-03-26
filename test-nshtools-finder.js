@@ -15,9 +15,6 @@ re = new RegExp('.js$');
 nsh.finder('.', {'RegExp' : re, 'scantype' : 'file'}, function (err, path) {
   if (path.match(/test-nshtools-finder.js$/)) {
     nsh.echo("Success: Found " + path);
-    process.exit(0);
-  } else {
-    nsh.echo("Scanning: " + path);
   }
 });
 
