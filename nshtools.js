@@ -24,10 +24,10 @@ var sys = require('sys'),
     fs = require('fs'),
     path = require('path');
 
-version = this.version = '0.0.2x';
-release = this.release = '2010.03.16';
-STACK = this.STACK = 1;
-QUEUE = this.QUEUE = 2;
+const version = this.version = '0.0.2x';
+const release = this.release = '2010.03.16';
+const STACK = this.STACK = 1;
+const QUEUE = this.QUEUE = 2;
 
 
 /**
