@@ -2,7 +2,7 @@ TODO 0.0.2
 ==========
 R. S. Doiel, <rsdoiel@gmail.com>
 version 0.0.2x 
-release 2010.03.11
+release 2010.04.14
 
 == OVERVIEW
 
@@ -11,7 +11,7 @@ This is a release to do check list.  0.0.2 will be the stable release after I fi
 == TODO BEFORE 0.0.2
 
 * better asynchronous assertive support
-* touch
+* implement touch file/directory
 * isReadable
 * isWritable
 * isExecutable
@@ -20,3 +20,6 @@ This is a release to do check list.  0.0.2 will be the stable release after I fi
 * changeGroup
 * Find by type, date modified, owner, group or name (e.g. *.txt)
 
+== BUGS
+
+* Update code to work with node 1.90

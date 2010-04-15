@@ -307,32 +307,37 @@ run = function () {
       sys.print(self.work_queue[0].message);
     }
 
-    /* If we're running in node-repl we'll throw an error on the
-       since this will be a second open. Ignore. */
-    try {
-      process.stdio.open();
-    } catch (err) {
-     // Ignore stdio is already open, probably in node-repl
-    }
-    process.stdio.addListener('data', function(data) {
-      var action = self.work_queue[0];
-      if (self.work_queue[0] === undefined) {
-        process.stdio.close();
-      } else {
-        action.callback(data);
-        self.work_queue.shift();
-        /* Run any non prompting tasks */
-        runTasks();
-        /* Prompt for next action. */
-        if (self.work_queue.length > 0) {
-          if (self.work_queue[0].qtype === 'prompt') {
-            sys.print(self.work_queue[0].message);
-          }
+    (function (){
+      var stdin = process.openStdin();
+      
+      inputHandler = function(data) {
+        var action = self.work_queue[0];
+        if (self.work_queue[0] === undefined) {
+          stdin.end();
         } else {
-          process.stdio.close();
-        }
-      }
-    });
+          action.callback(data.toString());
+          self.work_queue.shift();
+          /* Run any non prompting tasks */
+          runTasks();
+          /* Prompt for next action. */
+          if (self.work_queue.length > 0) {
+            if (self.work_queue[0].qtype === 'prompt') {
+              sys.print(self.work_queue[0].message);
+            }
+          } else {
+            stdin.end();
+          }
+        }      
+      };
+      
+      cleanupHandlers = function () {
+        stdin.removeListener('data', inputHandler);
+        stdin.removeListener('end', cleanupHandlers);      
+      };
+      
+      stdin.addListener('data', inputHandler);
+      stdin.addListener('end', cleanupHandlers);      
+    }());
   }
 };
 
