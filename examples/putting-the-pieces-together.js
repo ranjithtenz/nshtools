@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.task("Starting up ...", function () { nsh.echo("Started " + new Date()) } );
 nsh.task("List a directory", function() {
   nsh.exec("ls -l", function(ls_error, contents) {

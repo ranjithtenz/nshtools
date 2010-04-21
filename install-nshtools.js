@@ -3,9 +3,12 @@
 if(require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if(require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
 /* Bootstrap nshtools installation. */
-nsh = require(process.cwd() + '/nshtools').createNshtool();
+nsh = require(process.cwd() + '/nshtools');
 
 nsh.getOption('--prefix', function(prefix_error, prefix_path) {
   nsh.bin_path = '/bin';
@@ -24,7 +27,7 @@ function (response) {
   if (response.toUpperCase().trim() === 'Y') {
     nsh.verbose = false;
     nsh.echo("\n\n\tInstalling ..." + new Date() + "\n");
-    nsh.cp("nshtools.js", nsh.prefix_path + nsh.node_lib + '/nshtools.js', function (cp_error) {
+    nsh.cp("nshtools", nsh.prefix_path + nsh.node_lib + '/nshtools', function (cp_error) {
       if (cp_error) {
         nsh.die("Install failed. " + cp_error + "\n");
       }
@@ -35,31 +38,6 @@ function (response) {
   }
 });
 
-/*
-nsh.prompt("Do you want to install syncme.js in " + nsh.prefix_path +
-nsh.bin_path + "? (Y/N) ",
-function(response) {
-  if (response.toUpperCase().trim() === 'Y') {
-    nsh.verbose = false;
-    nsh.echo("\n\n\tInstalling ..." + new Date() + "\n");
-    nsh.cp("syncme.js", nsh.prefix_path + nsh.bin_path + '/syncme.js', function (cp_error) {
-      if (cp_error) {
-        nsh.echo("Install failed. " + cp_error + "\n");
-        return;
-      }
-      nsh.chmod(nsh.prefix_path + nsh.bin_path + '/syncme.js', 0775, function(error) {
-        if (error) {
-          nsh.die("ERROR: installing syncme.js: " + error + "\n");
-        }
-        nsh.echo("syncme.js made executable." + "\n");
-      });
-      nsh.echo("\nsyncme.js install complete. " + new Date() + "\n");
-    });
-  } else {
-    nsh.echo("\n\n\tNo action taken. Nothing installed. " + new Date() + "\n");
-  }
-});
-*/
 
 nsh.run();
 

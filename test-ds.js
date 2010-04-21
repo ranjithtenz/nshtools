@@ -11,14 +11,16 @@
 if (require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if (require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
-var nshtools = require('nshtools'),
-    nsh = nshtools.createNshtool(),
+var nsh = require('nshtools'),
     error_count = 0,
     LFTAB = "\n\t";
     OK = "Ok",
-    queue = nshtools.createQueue(), 
-    stack = nshtools.createStack();
+    queue = nsh.Queue(), 
+    stack = nsh.Stack();
 
 TestQueue = function () {
   /* Test the Queue */

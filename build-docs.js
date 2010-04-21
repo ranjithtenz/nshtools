@@ -8,17 +8,19 @@
 if(require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if(require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
-var nsh = require('nshtools').createNshtool();
+var nsh = require('nshtools');
 
 ABOUT = "NAME\n" +
-"\nbuild.js - generate HTML pages for nshtools\n\n" +
+"\nbuild-doc.js - generate HTML pages for nshtools\n\n" +
 "SYNPOSIS\n\n" +
-"build.js looks for files ending in .asciidoc and invokes asciidoc to turn them into web pages.\n\n" +
+"build-doc.js looks for files ending in .asciidoc and invokes asciidoc to turn them into web pages.\n\n" +
 "EXAMPLES\n\n" +
 "build.js is simple.\n" +
-"\n\tnode build.js\n\n";
-
+"\n\tnode build-doc.js\n\n";
 
 
 nsh.getOption('--help', function(option_error, arg) {
@@ -64,3 +66,4 @@ nsh.getOption('--help', function(option_error, arg) {
     });
   });
 })();
+

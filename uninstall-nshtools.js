@@ -3,11 +3,14 @@
 if(require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if(require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
 
 /* Bootstrap nshtools installation. */
-nshtools = require(process.cwd() + '/nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require(process.cwd() + '/nshtools');
+
 nsh.getOption('--prefix', function(prefix_error, prefix_path) {
   nsh.bin_path = '/bin';
   if (prefix_error) {
@@ -35,25 +38,6 @@ function (response) {
   }
 });
 
-/*
-nsh.prompt("Do you want to install syncme.js in " + nsh.prefix_path +
-nsh.bin_path + "? (Y/N) ",
-function(response) {
-  if (response.toUpperCase().trim() === 'Y') {
-    nsh.verbose = false;
-    nsh.echo("\n\n\tUninstalling ..." + new Date() + "\n");
-    nsh.remove("syncme.js", nsh.prefix_path + nsh.bin_path + '/syncme.js', function (remove_error) {
-      if (remove_error) {
-        nsh.echo("Uninstall failed. " + remove_error + "\n");
-        return;
-      }
-      nsh.echo("\nsyncme.js install complete. " + new Date() + "\n");
-    });
-  } else {
-    nsh.echo("\n\n\tNo action taken. Nothing uninstalled. " + new Date() + "\n");
-  }
-});
-*/
 
 nsh.run();
 

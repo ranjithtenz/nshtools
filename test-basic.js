@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 /**
- * Simple tests for shtools module.
+ * Simple tests for nshtools module.
  */
-nshtools = require(process.cwd() + '/nshtools');
+nsh = require(process.cwd() + '/nshtools');
 
-nsh = nshtools.createNshtool();
 nsh.verbose = true;
 
 nsh.task("Basic file operation test.", function (error, result) {
@@ -71,3 +70,4 @@ nsh.prompt("Did you get some results working with files? (Y/N)\n\n", function(re
 });
 
 nsh.run();
+

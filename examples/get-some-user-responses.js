@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.prompt("What is your name?", function(response) {
   nsh.echo("Glad to me you " + response.trim());
 });

@@ -1,0 +1,24 @@
+TODO 0.0.3x
+===========
+R. S. Doiel, <rsdoiel@gmail.com>
+version 0.0.3x
+release 2010.04.21
+
+== OVERVIEW
+
+This is a release to do check list.  0.0.3 will be the stable release after I finish with 0.0.3x (i.e. the experiment)
+
+== TODO BEFORE 0.0.3x
+
+* implement touch file/directory
+* isReadable
+* isWritable
+* isExecutable
+* changePermissions
+* changeOwnership
+* changeGroup
+* Find by type (e.g. directoryk, file), mime-type (e.g. image/jpeg), date modified, owner, group or name (e.g. *.txt)
+
+== BUGS
+
+* Update code to work with node 1.91

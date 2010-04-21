@@ -1,30 +1,32 @@
 nshtools.js(1)
 ==============
 R. S. Doiel, <rsdoiel@gmail.com>
-version 0.0.1x 2010.03.03
+version 0.0.3x 2010.04.21
 
 == NAME
 
-nshtools.js - a nodejs module for scripting those everyday chores
+nshtools.js - a nodejs module for scripting those everyday chores with node
 
 
 == SYNOPSIS
 
 nshtools allows the creation of an object that supports
 
-* common file operations like copy, move
+* common file high level operations like copy, move
 * the work queue design pattern with prompts and tasks
-* Simple support for long option command line parsing
+* simple support for long option command line parsing
+* mime type detection through filename extensions
+* find object for traversing directories trees and triggering callbacks
+* simple data structures like STACK and QUEUE
 
-It also supports two simple data structures with the DS object. I.e. nshtools.STACK and nshtools.QUEUE.
 
 == EXAMPLES
 
 link:examples/copy-tmp-file.js[copy-tmp-file.js]
 ----
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.prompt("What is your name?", function(response) {
   nsh.echo("Glad to me you " + response.trim());
 });
@@ -40,8 +42,8 @@ run() and prompt() are for.
 link:examples/get-some-user-responses.js[get-some-user-responses.js]
 ----
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.prompt("What is your name?", function(response) {
   nsh.echo("Glad to me you " + response.trim());
 });
@@ -56,8 +58,8 @@ If you want to group a bunch of tasks together that are fired in a queue (maybe 
 link:examples/putting-the-pieces-together.js[putting-the-pieces-together.js]
 ----
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.task("Starting up ...", function () { nsh.echo("Started " + new Date()) } );
 nsh.task("List a directory", function() {
   nsh.exec("ls -l", function(ls_error, contents) {
@@ -83,8 +85,8 @@ Here's an example of checking for long options on from the command line.
 link:examples/hello-getOption.js[hello-getOption.js]
 ----
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.getOption('--hello', function(error, value) {
   if (error) {
     nsh.echo("Try running this with --hello=Me and see what happens.");
@@ -102,19 +104,19 @@ All the file related methods expect trailing parameter for the callback. If you 
 link:examples/noop-with-getOption.js[noop-with-getOption.js]
 ----
 #!/usr/bin/env node
-nshtools = require('nshtools');
-nsh = nshtools.createNshtool();
+var nsh = require('nshtools');
+
 nsh.getOption('--ignore-this', nsh.NoOp);
 nsh.echo("That was rather pointless");
 ----
 
 It makes more sense for file operations where you're not going to use the outcome (e.g. `nsh.cp('file1.txt','file2.txt', nsh.NoOp)`).
 
-=== build.js
+=== build-docs.js
 
 A simple build script that looks for .txt files and uses AsciiDoc to render them as html.
 
-link:build.js[build.js]
+link:build-docs.js[build-docs.js]
 ----
 #!/usr/bin/env node
 /**
@@ -126,17 +128,19 @@ link:build.js[build.js]
 if(require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if(require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
-var nsh = require('nshtools').createNshtool();
+var nsh = require('nshtools');
 
 ABOUT = "NAME\n" +
-"\nbuild.js - generate HTML pages for nshtools\n\n" +
+"\nbuild-doc.js - generate HTML pages for nshtools\n\n" +
 "SYNPOSIS\n\n" +
-"build.js looks for files ending in .asciidoc and invokes asciidoc to turn them into web pages.\n\n" +
+"build-doc.js looks for files ending in .asciidoc and invokes asciidoc to turn them into web pages.\n\n" +
 "EXAMPLES\n\n" +
 "build.js is simple.\n" +
-"\n\tnode build.js\n\n";
-
+"\n\tnode build-doc.js\n\n";
 
 
 nsh.getOption('--help', function(option_error, arg) {
@@ -149,6 +153,7 @@ nsh.getOption('--help', function(option_error, arg) {
 
 /* Main script body */
 (function () {
+  nsh.echo("Running asciidoc to biuld html pages.  This takes a while.");
   nsh.globFolder('.', '.asciidoc$', function (error, filename) {
     if (error) {
       nsh.die(error);
@@ -182,3 +187,4 @@ nsh.getOption('--help', function(option_error, arg) {
   });
 })();
 ----
+

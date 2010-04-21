@@ -1,19 +1,14 @@
 #!/usr/bin/env node
 
-/**
- * syncme.js - take a list of git repos and walk through them doing a pull.
- *
- *
- */
 (function () {
-  var nsh = require('nshtools').createNshtool(),
-      syncme_conf = nsh.env.HOME + '/.syncme.json',
+  var nsh = require('nshtools'),
+      syncme_conf = nsh.env.HOME + '/.syncme-example.json',
       TrackedRepos = {},
       ABOUT = "NAME\n" +
-  "\tsyncme.js - utility to do a git-pull on a list of cloned repositories\n" +
+  "\tsyncme-example.js - utility to do a git-pull on a list of cloned repositories\n" +
   "\nSYNOPSIS\n\n" +
-  "syncme.js is an example script that reads $HOME/.syncme.json to get a list of git\n" +
-  "repos and do a git pull to update the local contents.  If $HOME/.syncme.json\n" +
+  "syncme-example.js is an example script that reads $HOME/.syncme-example.json to get a list of git\n" +
+  "repos and do a git pull to update the local contents.  If $HOME/.syncme-example.json\n" +
   "doesn't exist it will try to create an empty one. You edit syncme's\n" +
   "configuration with syncme. There are four basic options.\n\n" +
   "\t--add=NICKNAME:PATH\n" +
@@ -26,10 +21,10 @@
   "\t\tRun git pull in all the locations tha syncme knows about\n\n" +
   "\t--help\n" + 
   "\t\tShow this help message.\n\n" +
-  "If no options are specified syncme.js assumes the --run option.\n";
+  "If no options are specified syncme-example.js assumes the --run option.\n";
   
   
-  /* Before doing anything read in .syncme.json or create it. */
+  /* Before doing anything read in .syncme-example.json or create it. */
   nsh.getOption('--help', function(help_error, arg) {
     if (help_error) {
       /* Help not requested so skip */
@@ -38,7 +33,7 @@
     nsh.die(ABOUT,0);
   });
 
-  /* Push --run if no args are given to syncme.js */
+  /* Push --run if no args are given to syncme-example.js */
   if (nsh.ARGV.length < 3) {
     nsh.ARGV.push('--run');
   }
@@ -111,7 +106,7 @@
             nsh.echo("Syncing: " + path);
             nsh.exec("cd " + path + ";git pull", function(error, stdout, stderr) {
               if (error) {
-                nsh.die("ERROR: syncme.js: cd " + path + ";git pull\n" + error);
+                nsh.die("ERROR: syncme-example.js: cd " + path + ";git pull\n" + error);
               }
               nsh.echo(path + ": " + stdout);
               nsh.echo(path + ": " + stderr);

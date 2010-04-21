@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * test-nshtools-test.js - Test the merged test object a basic minimal level.
+ * test-test.js - test the Test object.
  *
  * @author R. S. Doiel, <rsdoiel@gmail.com>
  * copyright (c) 2010, R. S. Doiel, all rights reserved
@@ -11,10 +11,12 @@
 if (require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if (require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
-var nshtools = require('nshtools'),
-    nsh = nshtools.createNshtool(),
-    test = nshtools.createTest();
+var nsh = require('nshtools'),
+    test = nsh.Test();
 
 nsh.echo("Running some test of the test object.");
 nsh.echo("Testing test.echo(): " + (function() {
