@@ -22,9 +22,12 @@ if (require.paths.indexOf('.') < 0) {
   require.paths.push('.');
 }
 
-const version = this.version = '0.0.3x';
-const release = this.release = '2010.04.21';
+const version = '0.0.3x';
+const release = '2010.04.21';
 
+var sys = require('sys'),
+    fs = require('fs');
+    
 /* 
  * Pull in submodules and expose them as parts of nshtools 
  */

@@ -236,15 +236,7 @@ finder = function (folder, options, callback) {
 /*
  * Main exports of nsthools' module
  */
-exports.version = version;
-exports.release = release;
-exports.Test = test.Test;
 exports.echo = echo;
-exports.getOption = getOption;
-exports.prompt = prompt;
-exports.task = task;
-exports.NoOp = NoOp;
-exports.run  = run;
 exports.cp = cp;
 exports.mv = mv;
 exports.die = die;
