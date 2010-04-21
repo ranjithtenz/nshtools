@@ -5,7 +5,9 @@ version 0.0.3x 2010.04.21
 
 == OPEN BUGS
 
-* install, uninstall, package are all out of date with co-reorganization
+* install, uninstall, package are all out of date with co-reorganization 2010.04.21 RSD
+* documentation out of date 2010.04.21 RSD
+* mv/cp only move or copy files, needs to support directly level operations. 2010.04.21 RSD
 
 == FIXED BUGS
 
