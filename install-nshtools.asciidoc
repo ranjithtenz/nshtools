@@ -1,7 +1,7 @@
 install-nshtools.js(1)
 ======================
 R. S. Doiel <rsdoiel@gmail.com>
-Version, 0.0.1x, 2010.03.03
+Version, 0.0.3x, 2010.04.21
 
 copyright (c) 2010, R. S. Doiel, all rights reserved
 
@@ -13,7 +13,7 @@ install-nshtools.js
 
 == SYNPOSIS
 
-This is a simple installer written using nshtools.js to install nshtools.js module and syncme.js. It has one option.
+This is a simple installer written using nshtools.js to install nshtools.js module. It has one option.
 
 --Prefix::
         The prefix of where you want things installed.
