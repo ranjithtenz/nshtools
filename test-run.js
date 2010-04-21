@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-nshtools = require(process.cwd() + '/nshtools');
-nsh = nshtools.createNshtool();
+nsh = require(process.cwd() + '/nshtools');
 
 nsh.task("Task 1", nsh.NoOp);
 nsh.task("Task 2", nsh.NoOp);

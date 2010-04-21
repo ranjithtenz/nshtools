@@ -49,9 +49,9 @@ exports.Queue = ds.Queue;
 
 /* mimetype - implements simple mime type calculation based on file extensions */
 var mimetype = require('./mimetype');
-exports.Mimetype = mimetype;
-exports.Mimetype.updateFromFile = mimetype.updateFromFile;
-exports.Mimetype.getMimeType = mimetype.getMimeType;
+exports.mimetype = mimetype;
+exports.mimetype.updateFromFile = mimetype.updateFromFile;
+exports.mimetype.getMimeType = mimetype.getMimeType;
 
 /* option - a simple command line option processor */
 var option = require('./option');
@@ -69,6 +69,9 @@ exports.run = tpr.run;
 exports.NoOp = tpr.NoOp;
 exports.die = tpr.die;
 
+/* finder - a basic finder object which traverses file system and triggers callbacks */
+var finder = require('./finder');
+exports.finder = finder.finder;
 
 /*
  * Re-create some common Unix style file system primitives. 
@@ -86,7 +89,15 @@ exports.mv = os.mv;
 exports.rm = fs.unlink;
 exports.mkdir = fs.mkdir;
 exports.rmdir = fs.rmdir;
-exports.globFolder = os.globFolder;
-exports.finder = os.finder;
+exports.readFile = fs.readFile;
+exports.writeFile = fs.writeFile;
+exports.stat = fs.stat;
+exports.unlink = fs.unlink;
+exports.puts = sys.puts;
+exports.print = sys.print;
+exports.inspect = sys.inspect;
+exports.ENV = process.ENV
+exports.argv = process.argv;
+exports.LOGNAME = process.ENV.LOGNAME;
 
 

@@ -112,127 +112,6 @@ mv = function (source_path, target_path, callback) {
 };
 
 
-/**
- * globFolder - an overly simple approach to scan a folder for wild carded content.
- *
- * I think this will be superceded by a real node module that implements glob().
- *
- * @param search_path - the folder to scan, default path is ".". null, "" and undefined
- * are translated as ".".
- * @param wildcards - a string which will get passed to RegExp (e.g. *.txt)
- * @param callback - the method which will get called when something is found.
- * two parameters are passed - error, path.
- */
-globFolder = function (search_path, wildcards, callback) {
-  var self = this;
-  
-  // FIXME: Should allow searching subfolders
-  if (callback === undefined) {
-    callback = self.NoOp;
-  }
-  if (search_path === '' || search_path === null || search_path === undefined) {
-    search_path = '.';
-  }
-  fs.readdir(search_path, function (error, dirs) {
-    if (error) {
-      callback('ERROR: globFolder("' + search_path + "','" + wildcards + "'): " + error);
-      return;
-    }
-    re = new RegExp(wildcards);
-    for (i in dirs) {
-      (function (working_path) {
-        if (working_path.match(re)) {
-          callback(undefined, working_path);
-        }
-      })(dirs[i]);
-    }
-  });
-};
-
-
-/**
-  * proof of concept find files.  Need to add options support.
-  * findFiles
-  */
-findFiles = function (err, folder, callback) {
-  fs.readdir(folder, function (err, subfolders) {
-    if (err) {
-      callback(folder + ": " + err, folder);
-    }
-    for(i in subfolders) {
-      (function (subfolder) {
-        fs.stat(subfolder, function (err, stats) {
-          if (err) {
-            callback(subfolder + ": " + err, subfolder);
-          }
-          if (stats.isDirectory()) {
-            getSubFolders(subfolder, callback);
-          } else {
-            // If we were finding files then we would do callback here.
-            callback(undefined, subfolder);
-          }
-        });
-      })(path.join(folder, subfolders[i]));
-    }
-  });  
-};
-
-
-/**
- * finder - proof of concept for crawling folder trees.
- *
- * This should probably be integrated into a common object with globFolder
- *
- * @param folder - the path you want to scan
- * @param options - an object which defines regex, filter properties.
- * e.g. {'regex' : new RegEx('*.txt'), 'scantype' : 'file' , 'depth' : 1 }
- * @param callback - the callback function you want to run. Two parameters are
- * passed err and the path found.
- */
-finder = function (folder, options, callback) {
-  if (options.regex === undefined) {
-    options.regex = false;
-  }
-  if (options.scantype === undefined) {
-    options.scantype = 'all';
-  }
-
-  // If we're finding folders we find them here.  
-  if (options.scantype === 'directory' || options.scantype === 'all') {
-    if (options.regex === false) {
-      callback(undefined, folder);  
-    } else if (folder.match(options.regex)) {
-      callback(undefined, folder);
-    }
-  }
-  fs.readdir(folder, function (err, subfolders) {
-    if (err) {
-      callback(folder + ": " + err, folder);
-    }
-    for(i in subfolders) {
-      (function (subfolder) {
-        fs.stat(subfolder, function (err, stats) {
-          if (err) {
-            callback(subfolder + ": " + err, subfolder);
-          }
-          if (stats.isDirectory()) {
-            finder(subfolder, options, callback);
-          } else {
-            if (options.scantype === 'file' || options.scantype === 'all') {
-              if (options.regex === false) {
-                callback(undefined, subfolder);  
-              } else if (subfolder.match(options.regex)) {
-                callback(undefined, subfolder);
-              }
-            }
-          }
-        });
-      })(path.join(folder, subfolders[i]));
-    }
-  });  
-};
-
-
 /*
  * Main exports of nsthools' module
  */
@@ -240,8 +119,6 @@ exports.echo = echo;
 exports.cp = cp;
 exports.mv = mv;
 exports.die = die;
-exports.globFolder = globFolder;
-exports.finder = finder;
 
 /*
  * Basic aliases for CommonJS interoperability

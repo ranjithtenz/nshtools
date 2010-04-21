@@ -24,8 +24,9 @@ if (require.paths.indexOf('.') < 0) {
 var sys = require('sys'),
     fs = require('fs'),
     path = require('path'),
-    ds = require('./ds'),
-    self = { 'work_queue' : ds.Queue() };
+    self = {};
+    
+self.work_queue = [];
 
 
 /**
@@ -79,7 +80,7 @@ die = function (display_message, exit_val) {
  * Run all the queued prompts and callbacks.
  */
 run = function () {
-  var msg = '', self = this,
+  var msg = '',
       need_to_close_stdio = true;
       
   runTasks = function() {
@@ -92,7 +93,7 @@ run = function () {
     while(more_tasks) {
       if (self.work_queue[0].qtype === 'task') {
         action = self.work_queue.shift();
-        sys.print(action.label);
+        sys.puts(action.label);
         action.callback();
         if (self.work_queue.length === 0) {
           more_tasks = false;

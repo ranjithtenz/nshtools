@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 option_test = '--testme="Hello World"';
-nshtools = require(process.cwd() + '/nshtools');
-nsh = nshtools.createNshtool();
+nsh = require(process.cwd() + '/nshtools');
 nsh.echo("Running manual test. e.g. --test='hello world'");
 nsh.getOption('--test', function (test_error, value) {
   if (test_error) {

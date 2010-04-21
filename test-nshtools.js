@@ -6,15 +6,20 @@
 if (require.paths.indexOf(process.cwd()) < 0) {
   require.paths.push(process.cwd());
 }
+if (require.paths.indexOf('.') < 0) {
+  require.paths.push('.');
+}
 
-var nsh = require('nshtools').createNshtool(), sys = require('sys'),
-  tests = [];
+var nsh = require('nshtools'), 
+    sys = require('sys'),
+    tests = [];
 
-tests.push("node test-nshtools-ds.js");
-tests.push("node test-nshtools-getOption.js");
-tests.push("node test-nshtools-globFolder.js");
-tests.push("node test-nshtools-run.js");
-tests.push("node test-nshtools-test.js");
+tests.push("node test-ds.js");
+tests.push("node test-option.js");
+tests.push("node test-finder.js");
+tests.push("node test-mimetype.js");
+tests.push("node test-run.js");
+tests.push("node test-test.js");
 tests.push("echo 'You should manually interactive tests: test-nshtools-basic.js, test-nshtools-prompt.js, test-nshtools-die.js'");
 
 sys.puts("Running Automated Tests");
