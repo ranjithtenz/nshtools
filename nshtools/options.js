@@ -15,11 +15,11 @@
 var self = { 'argv' : process.ARGV };
 
 /**
- * parseArgs - passing the argument array to process.
+ * parse - passing the argument array to process.
  * @param argv - the argument array to process. Usually process.ARGV.
  * @return the arg list to process.
  */
-parseArgs = function (argv) {
+parse = function (argv) {
   self.argv = argv;  
   return self.argv;
 };
@@ -93,7 +93,7 @@ isAnOption = function (test, option) {
  * of the option. (e.g. --prefix=/home/username, then contents would contain /home/username)
  */
 getOption = function(option, validation, callback) {
-  var i = 0, next = 1, arg = '', opt = '', value, err;
+  var i = 0, k = 0, next = 1, arg = '', opt = '', value, err;
   if (arguments.length == 2) {
     callback = arguments[1];
     validation = undefined;
@@ -122,8 +122,11 @@ getOption = function(option, validation, callback) {
         } else {
           /* We have a short option list so we need to expand the argument list. */
           opts = arg.substr(2).split('');
-          for(j in opts) { 
-            self.argv.splice(i, 0, '-' + opts[j]); 
+          k = i; /* The insert point is initailly current location (i.e. value of i), 
+                    it'll move indepent of i as we insert items */
+          for(j in opts) {
+            self.argv.splice(k, 0, '-' + opts[j]);
+            k += 1; 
           }
         }
       }
@@ -146,10 +149,19 @@ getArgs = function () {
   return self.argv;
 };
 
+getArg = function (position) {
+  if (self.argv[position] === undefined) {
+    return;
+  }
+  return self.argv[position];
+};
+
 /*
  * Main exports of nsthools' module
  */
-exports.parseArgs = parseArgs;
+exports.parse = parse;
 exports.getOption = getOption;
 exports.getArgs = getArgs;
+exports.getArg = getArg;
+exports.isNumeric = isNumeric;
 

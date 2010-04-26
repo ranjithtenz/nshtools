@@ -23,7 +23,7 @@ if (require.paths.indexOf('.') < 0) {
 }
 
 const version = '0.0.3x';
-const release = '2010.04.21';
+const release = '2010.04.26';
 
 var sys = require('sys'),
     fs = require('fs');
@@ -53,11 +53,12 @@ exports.mimetype = mimetype;
 exports.mimetype.updateFromFile = mimetype.updateFromFile;
 exports.mimetype.getMimeType = mimetype.getMimeType;
 
-/* option - a simple command line option processor */
-var option = require('./option');
-exports.parseArgs = option.parseArgs;
-exports.getOption = option.getOption;
-exports.getArgs = option.getArgs;
+/* options - a simple command line option processor */
+var options = require('./options');
+exports.parse = options.parse;
+exports.getOption = options.getOption;
+exports.getArgs = options.getArgs;
+exports.getArg = options.getArg;
 
 
 /* tpr - Tasks, Prompts and Run; a system for managing starting tasks, prompting the user
