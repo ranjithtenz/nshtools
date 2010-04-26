@@ -12,6 +12,8 @@ if (require.paths.indexOf('.') < 0) {
 
 var nsh = require('nshtools'), 
     sys = require('sys'),
+    assert = require('assert'),
+    child_process = require('child_process'),
     tests = [];
 
 tests.push("node test-ds.js");
@@ -20,12 +22,14 @@ tests.push("node test-finder.js");
 tests.push("node test-mimetype.js");
 tests.push("node test-run.js");
 tests.push("node test-test.js");
-tests.push("echo 'You should manually interactive tests: test-nshtools-basic.js, test-nshtools-prompt.js, test-nshtools-die.js'");
 
 sys.puts("Running Automated Tests");
 for (test in tests) {
  (function (testname) {
-    sys.exec(testname, function (err, stderr, stdout) {
+    var parts = testname.split(" ", 2);
+    child_process.spawn(parts[0], [parts[1]]);
+    child_process.addListener('data',
+     function (err, stderr, stdout) {
       if (err) {
         sys.error('TEST ERROR: ' + err);
       }
@@ -35,8 +39,12 @@ for (test in tests) {
       if (stdout.trim() !== "") {
         sys.puts(stdout);
       }
-      sys.puts("Finished: " + testname + ": " + new Date());
+    });
+    child_process.addListener('exit', function (exit_code) {
+      sys.puts("Finished: " + testname + ": " + new Date() + ' exit code: ' + exit_code);
     });
  })(tests[test]);
 }
+sys.puts("You should manually interactive tests: test-basic.js, test-prompt.js, test-die.js");
+
 
