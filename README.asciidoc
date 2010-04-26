@@ -26,4 +26,4 @@ nshtools features:
 * simple finder module for operating on directories trees
 
 
-Checkout some of the link:examples[examples] or read link:nshtools.html[nshtools.html] (or link:nshtools.asciidoc[nshtools.asciidoc] if you're on github.com).
+Checkout some of the link:examples[examples/] or read link:nshtools.asciidoc[nshtools.asciidoc].
