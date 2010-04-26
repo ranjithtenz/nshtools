@@ -21,9 +21,9 @@ nshtools features:
 * support for common file operations like copy, move
 * the work queue design pattern with prompts and tasks
 * simple short/long option command line parsing
-* common data structure privatives like stacks and queues
+* common data structure primitives like stacks and queues
 * simple, extensible mime type detection from file extensions
 * simple finder module for operating on directories trees
 
 
-Checkout some of the examples/ direcotry or read nshtools.asciidoc.
+Checkout some of the examples/ directory or read nshtools.asciidoc.
