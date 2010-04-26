@@ -14,14 +14,16 @@ nshtools - a node module to aimed to make it easier to write shell scripts
 
 == SYNOPSIS
 
-link:http://nodejs.org[node] provides an excellent platform for building network applications using non-blocking I/O. Now you can also do the same for system chores.  JavaScript can be a fast, concise language to write scripts in but if you're writing them for managing your system that was problematic until node.  Node has an excellent file system module (i.e. fs) and process module. It's largely CommonJS compliant. It's only missing a few higher level objects to make things as easy as Bash and that is what nshtools tries to address.
+link:http://nodejs.org[node] provides an excellent platform for building network applications using non-blocking I/O. It is a powerful tool for doing system chores.  Nshtools attempts to build some general purpose high level modules (e.g. file management) on top of Node's excellent system modules.
 
-nshtools allows the creation of an object that supports
+nshtools features:
 
-* common file operations like copy, move
+* support for common file operations like copy, move
 * the work queue design pattern with prompts and tasks
-* Simple support for long option command line parsing
+* simple short/long option command line parsing
+* common data structure primitives like stacks and queues
+* simple, extensible mime type detection from file extensions
+* simple finder module for operating on directories trees
 
-It also supports two simple data structures with the DS object. I.e. nshtools.STACK and nshtools.QUEUE.
 
-Checkout some of the link:examples[examples] or read link:nshtools.html[nshtools.html] (or link:nshtools.asciidoc[nshtools.asciidoc] if you're on github.com).
+Checkout some of the examples/ directory or read nshtools.asciidoc.
