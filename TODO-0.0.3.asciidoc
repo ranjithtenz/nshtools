@@ -22,3 +22,4 @@ This is a release to do check list.  0.0.3 will be the stable release after I fi
 == BUGS
 
 * Update code to work with node 1.91
+* copy, move should work on directories as well as single files.
