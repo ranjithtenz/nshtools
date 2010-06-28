@@ -39,6 +39,12 @@ var test = require('./test');
 exports.Test = test.Test;
 
 /**
+ * UnitTests is a simple unit tests object without much in the way of 
+ * depedency. It does not rely on other nshtools' modules.
+ */
+exports.UnitTests = require('./unittests').UnitTests;
+
+/**
  * nshtools integrates some useful simple data structures (i.e. Stacks, Queues).
  * Stack(), Queue() functions which return a new stack or queue.
  */
