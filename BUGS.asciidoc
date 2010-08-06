@@ -1,7 +1,7 @@
 BUGS
 ====
 R.S. Doiel, <rsdoiel@gmail.com>
-version 0.0.3x 2010.04.21
+version 0.0.4x 2010.08.06
 
 == OPEN BUGS
 
@@ -10,5 +10,7 @@ version 0.0.3x 2010.04.21
 * mv/cp only move or copy files, needs to support directly level operations. 2010.04.21 RSD
 
 == FIXED BUGS
+
+* nshtools tests don't succeed with node 0.1.92 more recent node implementations. Updated codebase to pass tests under node 0.1.103.
 
 

@@ -21,10 +21,7 @@ if (require.paths.indexOf('.') < 0) {
   require.paths.push('.');
 }
 
-var sys = require('sys'),
-    fs = require('fs'),
-    path = require('path'),
-    self = {};
+var self = {};
     
 self.work_queue = [];
 
@@ -65,13 +62,13 @@ task = function (label, callback) {
 };
 
 /**
- * die - print something to the console using sys.error() and exit the process
+ * die - print something to process.stderr.write() and exit the process.
  */
 die = function (display_message, exit_val) {
   if (exit_val === undefined) {
     exit_val = 1;
   }
-  sys.error(display_message);
+  process.binding('stdio').writeError(display_message + "\n");
   process.exit(exit_val);
 };
 
@@ -93,7 +90,7 @@ run = function () {
     while(more_tasks) {
       if (self.work_queue[0].qtype === 'task') {
         action = self.work_queue.shift();
-        sys.puts(action.label);
+        process.stdout.write(action.label + "\n");
         action.callback();
         if (self.work_queue.length === 0) {
           more_tasks = false;
@@ -109,7 +106,7 @@ run = function () {
   if (self.work_queue.length > 0) {
     /* Display the first message in queue. */
     if (self.work_queue[0].qtype === 'prompt') {
-      sys.print(self.work_queue[0].message);
+      process.stdout.write(self.work_queue[0].message);
     }
 
     (function (){
@@ -118,7 +115,7 @@ run = function () {
       inputHandler = function(data) {
         var action = self.work_queue[0];
         if (self.work_queue[0] === undefined) {
-          stdin.end();
+          process.exit(0);
         } else {
           action.callback(data.toString());
           self.work_queue.shift();
@@ -127,21 +124,15 @@ run = function () {
           /* Prompt for next action. */
           if (self.work_queue.length > 0) {
             if (self.work_queue[0].qtype === 'prompt') {
-              sys.print(self.work_queue[0].message);
+              process.stdout.write(self.work_queue[0].message);
             }
           } else {
-            stdin.end();
+            process.exit(0);
           }
         }      
       };
-      
-      cleanupHandlers = function () {
-        stdin.removeListener('data', inputHandler);
-        stdin.removeListener('end', cleanupHandlers);      
-      };
-      
-      stdin.addListener('data', inputHandler);
-      stdin.addListener('end', cleanupHandlers);      
+            
+      stdin.on('data', inputHandler);
     }());
   }
 };

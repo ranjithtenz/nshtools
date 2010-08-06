@@ -1,46 +1,36 @@
-{
-   "name": "nshtools",
-   "version": "0.0.3",
-   "description": "A toolkit for shell scripting with NodeJS.",
-   "keywords": [
-       "node",
-       "shell",
-       "javascript" 
-   ],
-   "maintainers": [
-       {
-           "name": "R. S. Doiel",
-           "email": "rsdoiel@gmail.com",
-           "web": "http://github.com/rsdoiel" 
-       } 
-   ],
-   "bugs": {
+{ "name": "nshtools"
+, "version" : "0.0.4x"
+, "homepage" : "http://github.com/rsdoiel/nshtools"
+, "author" : "R. S. Doiel <rsdoiel@gmail.com> (http://github.com/rsdoiel"
+, "contributors" : []
+, "repository" : {
+           "type": "git",
+           "url": "git://github.com/rsdoiel/nshtools.git"
+   }
+, "bugs": {
        "web": "http://github.com/rsdoiel/nshtools/issues" 
    },
-   "licenses": [
+, "directories": {
+       "lib": "lib/node/libraries"
+   }
+, "engines": { "node" : ">=0.1.103" }
+, "scripts": {
+       "uninstall" : "./uninstall.js",
+       "install" : "./install.js",
+       "test": "node ./test-basic.js;node ./test-prompt.js;./test-die.js;node ./test-nshtools.js"
+   }
+, "licenses": [
        {
            "type": "Simplified BSD License",
            "url": "http://opensource.org/licenses/bsd-license.php" 
        }
-   ],
-   "repositories": [
-       {
-           "type": "git",
-           "url": "git://github.com/rsdoiel/nshtools.git"
-       } 
-   ],
-   "os": ["linux", "macos"],
-   "cpu": ["x86", "ppc", "x86_64"],
-   "engines": ["node >=0.1.91"],
-   "scripts": {
-       "uninstall" : "./uninstall-nshtools.js",
-       "preinstall" : "./install-nshtools.js",
-       "build": "./build.js",
-       "test": "./test-nshtools.js" 
-   },
-   "directories": {
-       "lib": "lib/node/libraries"
-   },
-   "main" : "nshtools"
+    ]
+, "description": "A toolkit for shell scripting with NodeJS.",
+, "keywords": [
+       "node",
+       "shell",
+       "javascript",
+       "library" 
+   ]
 }
 

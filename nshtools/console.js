@@ -37,25 +37,25 @@ addPrompt = function (label, callback) {
  * error and value.
  */
 prompt = function (label, callback) {
-  var sys = require('sys'), stdin = process.openStdin(), err;
+  var stdin = process.openStdin(), err;
   stdin.setEncoding('utf8');
 
   if (arguments.length > 0) {
     addPrompt(label, callback);
   }
   if (self.worker_queue.length > 0 && self.worker_queue[0].label !== undefined) {
-    sys.print(self.worker_queue[0].label);
+    process.stdout.write(self.worker_queue[0].label);
   }
 
   inputHandler = function(data) {
     var worker = self.worker_queue.shift();
     worker.callback(err, data.toString());
     if (self.worker_queue.length === 0) {
-      stdin.end();
+      process.exit(0);
     }
     
     if (self.worker_queue.length > 0 && self.worker_queue[0].label !== undefined) {
-      sys.print(self.worker_queue[0].label);
+      process.stdout.write(self.worker_queue[0].label);
     }
   };
 
@@ -63,15 +63,8 @@ prompt = function (label, callback) {
     err = exception;
   };
 
-  cleanupHandlers = function() {
-    stdin.removeListener('data', inputHandler);
-    stdin.removeListener('error', errorHandler);
-    stdin.removeListener('end', cleanupHandlers);
-  };
-
-  stdin.addListener('data', inputHandler);
-  stdin.addListener('error', errorHandler);
-  stdin.addListener('end', cleanupHandlers);
+  stdin.on('data', inputHandler);
+  stdin.on('error', errorHandler);
 };
 
 exports.addPrompt = addPrompt;
